@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -15,7 +16,7 @@
 
 using namespace libzerocoin;
 
-CzZIJAWallet::CzZIJAWallet(std::string strWalletFile)
+CzDAZZWallet::CzDAZZWallet(std::string strWalletFile)
 {
     this->strWalletFile = strWalletFile;
     CWalletDB walletdb(strWalletFile);
@@ -26,13 +27,13 @@ CzZIJAWallet::CzZIJAWallet(std::string strWalletFile)
     //Check for old db version of storing zpiv seed
     if (fFirstRun) {
         uint256 seed;
-        if (walletdb.ReadZZIJASeed_deprecated(seed)) {
+        if (walletdb.ReadZDAZZSeed_deprecated(seed)) {
             //Update to new format, erase old
             seedMaster = seed;
             hashSeed = Hash(seed.begin(), seed.end());
             if (pwalletMain->AddDeterministicSeed(seed)) {
-                if (walletdb.EraseZZIJASeed_deprecated()) {
-                    LogPrintf("%s: Updated zZIJA seed databasing\n", __func__);
+                if (walletdb.EraseZDAZZSeed_deprecated()) {
+                    LogPrintf("%s: Updated zDAZZ seed databasing\n", __func__);
                     fFirstRun = false;
                 } else {
                     LogPrintf("%s: failed to remove old zpiv seed\n", __func__);
@@ -70,7 +71,7 @@ CzZIJAWallet::CzZIJAWallet(std::string strWalletFile)
     this->mintPool = CMintPool(nCountLastUsed);
 }
 
-bool CzZIJAWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
+bool CzDAZZWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
 {
 
     CWalletDB walletdb(strWalletFile);
@@ -86,8 +87,8 @@ bool CzZIJAWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
     nCountLastUsed = 0;
 
     if (fResetCount)
-        walletdb.WriteZZIJACount(nCountLastUsed);
-    else if (!walletdb.ReadZZIJACount(nCountLastUsed))
+        walletdb.WriteZDAZZCount(nCountLastUsed);
+    else if (!walletdb.ReadZDAZZCount(nCountLastUsed))
         nCountLastUsed = 0;
 
     mintPool.Reset();
@@ -95,18 +96,18 @@ bool CzZIJAWallet::SetMasterSeed(const uint256& seedMaster, bool fResetCount)
     return true;
 }
 
-void CzZIJAWallet::Lock()
+void CzDAZZWallet::Lock()
 {
     seedMaster = 0;
 }
 
-void CzZIJAWallet::AddToMintPool(const std::pair<uint256, uint32_t>& pMint, bool fVerbose)
+void CzDAZZWallet::AddToMintPool(const std::pair<uint256, uint32_t>& pMint, bool fVerbose)
 {
     mintPool.Add(pMint, fVerbose);
 }
 
 //Add the next 20 mints to the mint pool
-void CzZIJAWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
+void CzDAZZWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
 {
 
     //Is locked
@@ -148,7 +149,7 @@ void CzZIJAWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
         CBigNum bnSerial;
         CBigNum bnRandomness;
         CKey key;
-        SeedToZZIJA(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
+        SeedToZDAZZ(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
 
         mintPool.Add(bnValue, i);
         CWalletDB(strWalletFile).WriteMintPoolPair(hashSeed, GetPubCoinHash(bnValue), i);
@@ -157,7 +158,7 @@ void CzZIJAWallet::GenerateMintPool(uint32_t nCountStart, uint32_t nCountEnd)
 }
 
 // pubcoin hashes are stored to db so that a full accounting of mints belonging to the seed can be tracked without regenerating
-bool CzZIJAWallet::LoadMintPoolFromDB()
+bool CzDAZZWallet::LoadMintPoolFromDB()
 {
     map<uint256, vector<pair<uint256, uint32_t> > > mapMintPool = CWalletDB(strWalletFile).MapMintPool();
 
@@ -168,20 +169,20 @@ bool CzZIJAWallet::LoadMintPoolFromDB()
     return true;
 }
 
-void CzZIJAWallet::RemoveMintsFromPool(const std::vector<uint256>& vPubcoinHashes)
+void CzDAZZWallet::RemoveMintsFromPool(const std::vector<uint256>& vPubcoinHashes)
 {
     for (const uint256& hash : vPubcoinHashes)
         mintPool.Remove(hash);
 }
 
-void CzZIJAWallet::GetState(int& nCount, int& nLastGenerated)
+void CzDAZZWallet::GetState(int& nCount, int& nLastGenerated)
 {
     nCount = this->nCountLastUsed + 1;
     nLastGenerated = mintPool.CountOfLastGenerated();
 }
 
 //Catch the counter up with the chain
-void CzZIJAWallet::SyncWithChain(bool fGenerateMintPool)
+void CzDAZZWallet::SyncWithChain(bool fGenerateMintPool)
 {
     uint32_t nLastCountUsed = 0;
     bool found = true;
@@ -282,7 +283,7 @@ void CzZIJAWallet::SyncWithChain(bool fGenerateMintPool)
     }
 }
 
-bool CzZIJAWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const uint256& txid, const CoinDenomination& denom)
+bool CzDAZZWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const uint256& txid, const CoinDenomination& denom)
 {
     if (!mintPool.Has(bnValue))
         return error("%s: value not in pool", __func__);
@@ -294,7 +295,7 @@ bool CzZIJAWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const
     CBigNum bnSerial;
     CBigNum bnRandomness;
     CKey key;
-    SeedToZZIJA(seedZerocoin, bnValueGen, bnSerial, bnRandomness, key);
+    SeedToZDAZZ(seedZerocoin, bnValueGen, bnSerial, bnRandomness, key);
 
     //Sanity check
     if (bnValueGen != bnValue)
@@ -335,7 +336,7 @@ bool CzZIJAWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const
     if (nCountLastUsed < pMint.second) {
         CWalletDB walletdb(strWalletFile);
         nCountLastUsed = pMint.second;
-        walletdb.WriteZZIJACount(nCountLastUsed);
+        walletdb.WriteZDAZZCount(nCountLastUsed);
     }
 
     //remove from the pool
@@ -352,7 +353,7 @@ bool IsValidCoinValue(const CBigNum& bnValue)
     bnValue.isPrime();
 }
 
-void CzZIJAWallet::SeedToZZIJA(const uint512& seedZerocoin, CBigNum& bnValue, CBigNum& bnSerial, CBigNum& bnRandomness, CKey& key)
+void CzDAZZWallet::SeedToZDAZZ(const uint512& seedZerocoin, CBigNum& bnValue, CBigNum& bnSerial, CBigNum& bnRandomness, CKey& key)
 {
     ZerocoinParams* params = Params().Zerocoin_Params(false);
 
@@ -401,7 +402,7 @@ void CzZIJAWallet::SeedToZZIJA(const uint512& seedZerocoin, CBigNum& bnValue, CB
     }
 }
 
-uint512 CzZIJAWallet::GetZerocoinSeed(uint32_t n)
+uint512 CzDAZZWallet::GetZerocoinSeed(uint32_t n)
 {
     CDataStream ss(SER_GETHASH, 0);
     ss << seedMaster << n;
@@ -409,14 +410,14 @@ uint512 CzZIJAWallet::GetZerocoinSeed(uint32_t n)
     return zerocoinSeed;
 }
 
-void CzZIJAWallet::UpdateCount()
+void CzDAZZWallet::UpdateCount()
 {
     nCountLastUsed++;
     CWalletDB walletdb(strWalletFile);
-    walletdb.WriteZZIJACount(nCountLastUsed);
+    walletdb.WriteZDAZZCount(nCountLastUsed);
 }
 
-void CzZIJAWallet::GenerateDeterministicZZIJA(CoinDenomination denom, PrivateCoin& coin, CDeterministicMint& dMint, bool fGenerateOnly)
+void CzDAZZWallet::GenerateDeterministicZDAZZ(CoinDenomination denom, PrivateCoin& coin, CDeterministicMint& dMint, bool fGenerateOnly)
 {
     GenerateMint(nCountLastUsed + 1, denom, coin, dMint);
     if (fGenerateOnly)
@@ -426,14 +427,14 @@ void CzZIJAWallet::GenerateDeterministicZZIJA(CoinDenomination denom, PrivateCoi
     //LogPrintf("%s : Generated new deterministic mint. Count=%d pubcoin=%s seed=%s\n", __func__, nCount, coin.getPublicCoin().getValue().GetHex().substr(0,6), seedZerocoin.GetHex().substr(0, 4));
 }
 
-void CzZIJAWallet::GenerateMint(const uint32_t& nCount, const CoinDenomination denom, PrivateCoin& coin, CDeterministicMint& dMint)
+void CzDAZZWallet::GenerateMint(const uint32_t& nCount, const CoinDenomination denom, PrivateCoin& coin, CDeterministicMint& dMint)
 {
     uint512 seedZerocoin = GetZerocoinSeed(nCount);
     CBigNum bnValue;
     CBigNum bnSerial;
     CBigNum bnRandomness;
     CKey key;
-    SeedToZZIJA(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
+    SeedToZDAZZ(seedZerocoin, bnValue, bnSerial, bnRandomness, key);
     coin = PrivateCoin(Params().Zerocoin_Params(false), denom, bnSerial, bnRandomness);
     coin.setPrivKey(key.GetPrivKey());
     coin.setVersion(PrivateCoin::CURRENT_VERSION);
@@ -447,7 +448,7 @@ void CzZIJAWallet::GenerateMint(const uint32_t& nCount, const CoinDenomination d
     dMint.SetDenomination(denom);
 }
 
-bool CzZIJAWallet::RegenerateMint(const CDeterministicMint& dMint, CZerocoinMint& mint)
+bool CzDAZZWallet::RegenerateMint(const CDeterministicMint& dMint, CZerocoinMint& mint)
 {
     //Check that the seed is correct    todo:handling of incorrect, or multiple seeds
     uint256 hashSeed = Hash(seedMaster.begin(), seedMaster.end());

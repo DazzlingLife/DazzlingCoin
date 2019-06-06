@@ -3,7 +3,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -54,7 +55,7 @@ using namespace std;
 using namespace libzerocoin;
 
 #if defined(NDEBUG)
-#error "ZIJA cannot be compiled without assertions."
+#error "DAZZ cannot be compiled without assertions."
 #endif
 
 /**
@@ -952,16 +953,16 @@ bool ContextualCheckZerocoinMint(const CTransaction& tx, const PublicCoin& coin,
 
 bool ContextualCheckZerocoinSpend(const CTransaction& tx, const CoinSpend& spend, CBlockIndex* pindex, const uint256& hashBlock)
 {
-    //Check to see if the zZIJA is properly signed
+    //Check to see if the zDAZZ is properly signed
     if (pindex->nHeight >= Params().Zerocoin_Block_V2_Start()) {
         if (!spend.HasValidSignature())
-            return error("%s: V2 zZIJA spend does not have a valid signature", __func__);
+            return error("%s: V2 zDAZZ spend does not have a valid signature", __func__);
 
         libzerocoin::SpendType expectedType = libzerocoin::SpendType::SPEND;
         if (tx.IsCoinStake())
             expectedType = libzerocoin::SpendType::STAKE;
         if (spend.getSpendType() != expectedType) {
-            return error("%s: trying to spend zZIJA without the correct spend type. txid=%s", __func__,
+            return error("%s: trying to spend zDAZZ without the correct spend type. txid=%s", __func__,
                 tx.GetHash().GetHex());
         }
     }
@@ -969,14 +970,14 @@ bool ContextualCheckZerocoinSpend(const CTransaction& tx, const CoinSpend& spend
     //Reject serial's that are already in the blockchain
     int nHeightTx = 0;
     if (IsSerialInBlockchain(spend.getCoinSerialNumber(), nHeightTx))
-        return error("%s : zZIJA spend with serial %s is already in block %d\n", __func__,
+        return error("%s : zDAZZ spend with serial %s is already in block %d\n", __func__,
             spend.getCoinSerialNumber().GetHex(), nHeightTx);
 
     //Reject serial's that are not in the acceptable value range
     bool fUseV1Params = spend.getVersion() < libzerocoin::PrivateCoin::PUBKEY_VERSION;
     if (pindex->nHeight > Params().Zerocoin_Block_EnforceSerialRange() &&
         !spend.HasValidSerial(Params().Zerocoin_Params(fUseV1Params)))
-        return error("%s : zZIJA spend with serial %s from tx %s is not in valid range\n", __func__,
+        return error("%s : zDAZZ spend with serial %s from tx %s is not in valid range\n", __func__,
             spend.getCoinSerialNumber().GetHex(), tx.GetHash().GetHex());
 
     return true;
@@ -1283,7 +1284,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
             //Check that txid is not already in the chain
             int nHeightTx = 0;
             if (IsTransactionInChain(tx.GetHash(), nHeightTx))
-                return state.Invalid(error("AcceptToMemoryPool : zZIJA spend tx %s already in block %d",
+                return state.Invalid(error("AcceptToMemoryPool : zDAZZ spend tx %s already in block %d",
                                          tx.GetHash().GetHex(), nHeightTx),
                     REJECT_DUPLICATE, "bad-txns-inputs-spent");
 
@@ -1324,7 +1325,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
                 }
             }
 
-            // Check that zZIJA mints are not already known
+            // Check that zDAZZ mints are not already known
             if (tx.IsZerocoinMint()) {
                 for (auto& out : tx.vout) {
                     if (!out.IsZerocoinMint())
@@ -1816,16 +1817,11 @@ int64_t GetBlockValue(int nHeight)
     }
 
     int64_t nSubsidy = 0;
-    if (nHeight < 51){ //PREMINE 1 MILLION
-        nSubsidy = 20000 * COIN;
+    if (nHeight < 31){ //PREMINE 27500000
+        nSubsidy = 916666 * COIN;
     } else {
-        nSubsidy = 8.0067 * COIN;
+        nSubsidy = 100 * COIN;
     }
-
-    //int nBehalf = (nHeight - 12600000) / Params().SubsidyHalvingInterval(); // 12months after, the reward decrease as behalf
-    //for (int i = 0; i < nBehalf; i++) {
-    //    nSubsidy = nSubsidy * 90 / 100;
-    //}
 
     return nSubsidy;
 }
@@ -1833,7 +1829,7 @@ int64_t GetBlockValue(int nHeight)
 int64_t GetDevFundPayment(int nHeight, int64_t blockValue)
 {
     int64_t ret_val = 0;
-    ret_val = blockValue * 15 / 100; //15% of the reward while POS
+    ret_val = blockValue * 10 / 100; //10% of the reward while POS
     return ret_val;
 }
 
@@ -2072,7 +2068,7 @@ CAmount GetSeeSaw(const CAmount& blockValue, int nMasternodeCount, int nHeight)
     return ret;
 }
 
-int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCount, bool isZZIJAStake)
+int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCount, bool isZDAZZStake)
 {
     int64_t ret = 0;
 
@@ -2092,9 +2088,9 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     // } else if (nHeight < Params().Zerocoin_Block_V2_Start()) {
     //     return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
     // } else {
-    //     //When zZIJA is staked, masternode only gets 2 ZIJA
+    //     //When zDAZZ is staked, masternode only gets 2 DAZZ
     //     ret = 3 * COIN;
-    //     if (isZZIJAStake)
+    //     if (isZDAZZStake)
     //         ret = 2 * COIN;
     // }
 
@@ -2469,7 +2465,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
         const CTransaction& tx = block.vtx[i];
 
         /** UNDO ZEROCOIN DATABASING
-         * note we only undo zerocoin databasing in the following statement, value to and from ZIJA
+         * note we only undo zerocoin databasing in the following statement, value to and from DAZZ
          * addresses should still be handled by the typical bitcoin based undo code
          * */
         if (tx.ContainsZerocoins()) {
@@ -2611,11 +2607,11 @@ static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck()
 {
-    RenameThread("zija-scriptch");
+    RenameThread("dazzling-scriptch");
     scriptcheckqueue.Thread();
 }
 
-void RecalculateZZIJAMinted()
+void RecalculateZDAZZMinted()
 {
     CBlockIndex* pindex = chainActive[Params().Zerocoin_StartHeight()];
     int nHeightEnd = chainActive.Height();
@@ -2642,14 +2638,14 @@ void RecalculateZZIJAMinted()
     }
 }
 
-void RecalculateZZIJASpent()
+void RecalculateZDAZZSpent()
 {
     CBlockIndex* pindex = chainActive[Params().Zerocoin_StartHeight()];
     while (true) {
         if (pindex->nHeight % 1000 == 0)
             LogPrintf("%s : block %d...\n", __func__, pindex->nHeight);
 
-        //Rewrite zZIJA supply
+        //Rewrite zDAZZ supply
         CBlock block;
         assert(ReadBlockFromDisk(block, pindex));
 
@@ -2658,13 +2654,13 @@ void RecalculateZZIJASpent()
         //Reset the supply to previous block
         pindex->mapZerocoinSupply = pindex->pprev->mapZerocoinSupply;
 
-        //Add mints to zZIJA supply
+        //Add mints to zDAZZ supply
         for (auto denom : libzerocoin::zerocoinDenomList) {
             long nDenomAdded = count(pindex->vMintDenominationsInBlock.begin(), pindex->vMintDenominationsInBlock.end(), denom);
             pindex->mapZerocoinSupply.at(denom) += nDenomAdded;
         }
 
-        //Remove spends from zZIJA supply
+        //Remove spends from zDAZZ supply
         for (auto denom : listDenomsSpent)
             pindex->mapZerocoinSupply.at(denom)--;
 
@@ -2678,7 +2674,7 @@ void RecalculateZZIJASpent()
     }
 }
 
-bool RecalculateZIJASupply(int nHeightStart)
+bool RecalculateDAZZSupply(int nHeightStart)
 {
     if (nHeightStart > chainActive.Height())
         return false;
@@ -2750,7 +2746,7 @@ bool RecalculateZIJASupply(int nHeightStart)
 
 bool ReindexAccumulators(list<uint256>& listMissingCheckpoints, string& strError)
 {
-    // ZIJA: recalculate Accumulator Checkpoints that failed to database properly
+    // DAZZ: recalculate Accumulator Checkpoints that failed to database properly
     if (!listMissingCheckpoints.empty()) {
         uiInterface.ShowProgress(_("Calculating missing accumulators..."), 0);
         LogPrintf("%s : finding missing checkpoints\n", __func__);
@@ -2798,7 +2794,7 @@ bool ReindexAccumulators(list<uint256>& listMissingCheckpoints, string& strError
     return true;
 }
 
-bool UpdateZZIJASupply(const CBlock& block, CBlockIndex* pindex)
+bool UpdateZDAZZSupply(const CBlock& block, CBlockIndex* pindex)
 {
     std::list<CZerocoinMint> listMints;
     bool fFilterInvalid = pindex->nHeight >= Params().Zerocoin_Block_RecalculateAccumulators();
@@ -2976,7 +2972,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                     return state.DoS(100, error("%s: failed to add block %s with invalid zerocoinspend", __func__, tx.GetHash().GetHex()), REJECT_INVALID);
             }
 
-            // Check that zZIJA mints are not already known
+            // Check that zDAZZ mints are not already known
             if (tx.IsZerocoinMint()) {
                 for (auto& out : tx.vout) {
                     if (!out.IsZerocoinMint())
@@ -3004,7 +3000,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                 }
             }
 
-            // Check that zZIJA mints are not already known
+            // Check that zDAZZ mints are not already known
             if (tx.IsZerocoinMint()) {
                 for (auto& out : tx.vout) {
                     if (!out.IsZerocoinMint())
@@ -3052,21 +3048,21 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     //A one-time event where money supply counts were off and recalculated on a certain block.
     if (pindex->nHeight == Params().Zerocoin_Block_RecalculateAccumulators() + 1) {
-        RecalculateZZIJAMinted();
-        RecalculateZZIJASpent();
-        RecalculateZIJASupply(Params().Zerocoin_StartHeight());
+        RecalculateZDAZZMinted();
+        RecalculateZDAZZSpent();
+        RecalculateDAZZSupply(Params().Zerocoin_StartHeight());
     }
 
-    //Track zZIJA money supply in the block index
-    if (!UpdateZZIJASupply(block, pindex))
-        return state.DoS(100, error("%s: Failed to calculate new zZIJA supply for block=%s height=%d", __func__, block.GetHash().GetHex(), pindex->nHeight), REJECT_INVALID);
+    //Track zDAZZ money supply in the block index
+    if (!UpdateZDAZZSupply(block, pindex))
+        return state.DoS(100, error("%s: Failed to calculate new zDAZZ supply for block=%s height=%d", __func__, block.GetHash().GetHex(), pindex->nHeight), REJECT_INVALID);
 
     // track money supply and mint amount info
     CAmount nMoneySupplyPrev = pindex->pprev ? pindex->pprev->nMoneySupply : 0;
     pindex->nMoneySupply = nMoneySupplyPrev + nValueOut - nValueIn;
     pindex->nMint = pindex->nMoneySupply - nMoneySupplyPrev + nFees;
 
-    //    LogPrintf("XX69----------> ConnectBlock(): nValueOut: %s, nValueIn: %s, nFees: %s, nMint: %s zZijaSpent: %s\n",
+    //    LogPrintf("XX69----------> ConnectBlock(): nValueOut: %s, nValueIn: %s, nFees: %s, nMint: %s zDazzlingSpent: %s\n",
     //              FormatMoney(nValueOut), FormatMoney(nValueIn),
     //              FormatMoney(nFees), FormatMoney(pindex->nMint), FormatMoney(nAmountZerocoinSpent));
 
@@ -3118,7 +3114,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         setDirtyBlockIndex.insert(pindex);
     }
 
-    //Record zZIJA serials
+    //Record zDAZZ serials
     set<uint256> setAddedTx;
     for (pair<CoinSpend, uint256> pSpend : vSpends) {
         // Send signal to wallet if this is ours
@@ -3259,7 +3255,7 @@ void static UpdateTip(CBlockIndex* pindexNew)
 {
     chainActive.SetTip(pindexNew);
 
-    // If turned on AutoZeromint will automatically convert ZIJA to zZIJA
+    // If turned on AutoZeromint will automatically convert DAZZ to zDAZZ
     if (pwalletMain->isZeromintEnabled())
         pwalletMain->AutoZeromint();
 
@@ -4102,7 +4098,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                 nHeight = (*mi).second->nHeight + 1;
         }
 
-        // ZIJA
+        // DAZZ
         // It is entierly possible that we don't have enough data and this could fail
         // (i.e. the block could indeed be valid). Store the block for later consideration
         // but issue an initial reject message.
@@ -4154,13 +4150,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         if (!CheckTransaction(tx, fZerocoinActive, chainActive.Height() + 1 >= Params().Zerocoin_Block_EnforceSerialRange(), state))
             return error("CheckBlock() : CheckTransaction failed");
 
-        // double check that there are no double spent zZIJA spends in this block
+        // double check that there are no double spent zDAZZ spends in this block
         if (tx.IsZerocoinSpend()) {
             for (const CTxIn txIn : tx.vin) {
                 if (txIn.scriptSig.IsZerocoinSpend()) {
                     libzerocoin::CoinSpend spend = TxInToZerocoinSpend(txIn);
                     if (count(vBlockSerials.begin(), vBlockSerials.end(), spend.getCoinSerialNumber()))
-                        return state.DoS(100, error("%s : Double spending of zZIJA serial %s in block\n Block: %s",
+                        return state.DoS(100, error("%s : Double spending of zDAZZ serial %s in block\n Block: %s",
                                                   __func__, spend.getCoinSerialNumber().GetHex(), block.ToString()));
                     vBlockSerials.emplace_back(spend.getCoinSerialNumber());
                 }
@@ -4366,21 +4362,21 @@ bool AcceptBlockHeader(const CBlock& block, CValidationState& state, CBlockIndex
 bool ContextualCheckZerocoinStake(int nHeight, CStakeInput* stake)
 {
     if (nHeight < Params().Zerocoin_Block_V2_Start())
-        return error("%s: zZIJA stake block is less than allowed start height", __func__);
+        return error("%s: zDAZZ stake block is less than allowed start height", __func__);
 
-    if (CZZijaStake* zZIJA = dynamic_cast<CZZijaStake*>(stake)) {
-        CBlockIndex* pindexFrom = zZIJA->GetIndexFrom();
+    if (CZDazzlingStake* zDAZZ = dynamic_cast<CZDazzlingStake*>(stake)) {
+        CBlockIndex* pindexFrom = zDAZZ->GetIndexFrom();
         if (!pindexFrom)
-            return error("%s: failed to get index associated with zZIJA stake checksum", __func__);
+            return error("%s: failed to get index associated with zDAZZ stake checksum", __func__);
 
         if (chainActive.Height() - pindexFrom->nHeight < Params().Zerocoin_RequiredStakeDepth())
-            return error("%s: zZIJA stake does not have required confirmation depth", __func__);
+            return error("%s: zDAZZ stake does not have required confirmation depth", __func__);
 
         //The checksum needs to be the exact checksum from 200 blocks ago
         uint256 nCheckpoint200 = chainActive[nHeight - Params().Zerocoin_RequiredStakeDepth()]->nAccumulatorCheckpoint;
-        uint32_t nChecksum200 = ParseChecksum(nCheckpoint200, libzerocoin::AmountToZerocoinDenomination(zZIJA->GetValue()));
-        if (nChecksum200 != zZIJA->GetChecksum())
-            return error("%s: accumulator checksum is different than the block 200 blocks previous. stake=%d block200=%d", __func__, zZIJA->GetChecksum(), nChecksum200);
+        uint32_t nChecksum200 = ParseChecksum(nCheckpoint200, libzerocoin::AmountToZerocoinDenomination(zDAZZ->GetValue()));
+        if (nChecksum200 != zDAZZ->GetChecksum())
+            return error("%s: accumulator checksum is different than the block 200 blocks previous. stake=%d block200=%d", __func__, zDAZZ->GetChecksum(), nChecksum200);
     } else {
         return error("%s: dynamic_cast of stake ptr failed", __func__);
     }
@@ -4430,8 +4426,8 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         if (!stake)
             return error("%s: null stake ptr", __func__);
 
-        if (stake->IsZZIJA() && !ContextualCheckZerocoinStake(pindexPrev->nHeight, stake.get()))
-            return state.DoS(100, error("%s: staked zZIJA fails context checks", __func__));
+        if (stake->IsZDAZZ() && !ContextualCheckZerocoinStake(pindexPrev->nHeight, stake.get()))
+            return state.DoS(100, error("%s: staked zDAZZ fails context checks", __func__));
 
         uint256 hash = block.GetHash();
         if (!mapProofOfStake.count(hash)) // add to mapProofOfStake
@@ -4559,7 +4555,7 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
         }
     }
     if (nMints || nSpends)
-        LogPrintf("%s : block contains %d zZIJA mints and %d zZIJA spends\n", __func__, nMints, nSpends);
+        LogPrintf("%s : block contains %d zDAZZ mints and %d zDAZZ spends\n", __func__, nMints, nSpends);
 
     if (!CheckBlockSignature(*pblock))
         return error("ProcessNewBlock() : bad proof-of-stake block signature");
@@ -5595,7 +5591,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             return false;
         }
 
-        // ZIJA: We use certain sporks during IBD, so check to see if they are
+        // DAZZ: We use certain sporks during IBD, so check to see if they are
         // available. If not, ask the first peer connected for them.
         bool fMissingSporks = !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT) &&
                               !pSporkDB->SporkExists(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) &&

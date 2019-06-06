@@ -1,7 +1,8 @@
 // Copyright (c) 2012-2014 The Bitcoin developers
 // Copyright (c) 2016-2017 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,10 +14,10 @@
 
 /**
  * Name of client reported in the 'version' message. Report the same name
- * for both zijad and zija-qt, to make it harder for attackers to
+ * for both dazzlingd and dazzling-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("ZIJA Core");
+const std::string CLIENT_NAME("DAZZ Core");
 
 /**
  * Client version number

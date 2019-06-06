@@ -3,7 +3,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -103,7 +104,7 @@ UniValue getgenerate(const UniValue& params, bool fHelp)
         throw runtime_error(
             "getgenerate\n"
             "\nReturn if the server is set to generate coins or not. The default is false.\n"
-            "It is set with the command line argument -gen (or zija.conf setting gen)\n"
+            "It is set with the command line argument -gen (or dazzling.conf setting gen)\n"
             "It can also be set with the setgenerate call.\n"
 
             "\nResult\n"
@@ -437,10 +438,10 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "ZIJA is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "DAZZ is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "ZIJA is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "DAZZ is downloading blocks...");
 
     static unsigned int nTransactionsUpdatedLast;
 

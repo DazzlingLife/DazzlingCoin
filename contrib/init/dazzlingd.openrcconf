@@ -1,0 +1,26 @@
+# /etc/conf.d/dazzlingd: config file for /etc/init.d/dazzlingd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/dazzling/dazzling.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/dazzlingd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/dazzlingd.pid"
+
+# Where to write dazzlingd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/dazzlingd"
+
+# User and group to own dazzlingd process
+#BITCOIND_USER="dazzling"
+#BITCOIND_GROUP="dazzling"
+
+# Path to dazzlingd executable
+#BITCOIND_BIN="/usr/bin/dazzlingd"
+
+# Nice value to run dazzlingd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

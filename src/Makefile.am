@@ -80,15 +80,15 @@ noinst_PROGRAMS =
 TESTS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += zijad
+  bin_PROGRAMS += dazzlingd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += zija-cli zija-tx
+  bin_PROGRAMS += dazzling-cli dazzling-tx
 endif
 
 .PHONY: FORCE
-# zija core #
+# dazzling core #
 BITCOIN_CORE_H = \
   activemasternode.h \
   accumulators.h \
@@ -206,7 +206,7 @@ obj/build.h: FORCE
 	  "$(abs_top_srcdir)"
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between zijad and zija-qt
+# server: shared between dazzlingd and dazzling-qt
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
@@ -254,7 +254,7 @@ libbitcoin_zmq_a_SOURCES = \
   zmq/zmqpublishnotifier.cpp
 endif
 
-# wallet: shared between zijad and zija-qt, but only linked
+# wallet: shared between dazzlingd and dazzling-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -349,7 +349,7 @@ libzerocoin_libbitcoin_zerocoin_a_SOURCES = \
   libzerocoin/Params.cpp \
   libzerocoin/SerialNumberSignatureOfKnowledge.cpp
 
-# common: shared between zijad, and zija-qt and non-server tools
+# common: shared between dazzlingd, and dazzling-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -412,7 +412,7 @@ if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
 
-# cli: shared between zija-cli and zija-qt
+# cli: shared between dazzling-cli and dazzling-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -422,16 +422,16 @@ libbitcoin_cli_a_SOURCES = \
 nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# zijad binary #
-zijad_SOURCES = zijad.cpp
-zijad_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-zijad_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zijad_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# dazzlingd binary #
+dazzlingd_SOURCES = dazzlingd.cpp
+dazzlingd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+dazzlingd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+dazzlingd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zijad_SOURCES += zijad-res.rc
+dazzlingd_SOURCES += dazzlingd-res.rc
 endif
-zijad_LDADD = \
+dazzlingd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -444,38 +444,38 @@ zijad_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-zijad_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+dazzlingd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
-# zija-cli binary #
-zija_cli_SOURCES = zija-cli.cpp
-zija_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-zija_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zija_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# dazzling-cli binary #
+dazzling_cli_SOURCES = dazzling-cli.cpp
+dazzling_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+dazzling_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+dazzling_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zija_cli_SOURCES += zija-cli-res.rc
+dazzling_cli_SOURCES += dazzling-cli-res.rc
 endif
 
-zija_cli_LDADD = \
+dazzling_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-zija_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+dazzling_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# zija-tx binary #
-zija_tx_SOURCES = zija-tx.cpp
-zija_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-zija_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zija_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# dazzling-tx binary #
+dazzling_tx_SOURCES = dazzling-tx.cpp
+dazzling_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+dazzling_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+dazzling_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zija_tx_SOURCES += zija-tx-res.rc
+dazzling_tx_SOURCES += dazzling-tx-res.rc
 endif
 
-zija_tx_LDADD = \
+dazzling_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_ZEROCOIN) \
@@ -483,7 +483,7 @@ zija_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-zija_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+dazzling_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #

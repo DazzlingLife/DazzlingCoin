@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -485,7 +486,7 @@ BOOST_AUTO_TEST_CASE(deterministic_tests)
     CWalletDB walletdb(strWalletFile, "cr+");
 
     CWallet wallet(strWalletFile);
-    CzZIJAWallet zWallet(wallet.strWalletFile);
+    CzDAZZWallet zWallet(wallet.strWalletFile);
     zWallet.SetMasterSeed(seedMaster);
     wallet.setZWallet(&zWallet);
 
@@ -497,7 +498,7 @@ BOOST_AUTO_TEST_CASE(deterministic_tests)
     for (int i = 0; i < nTests; i++) {
         PrivateCoin coin(Params().Zerocoin_Params(false), denom, false);
         CDeterministicMint dMint;
-        zWallet.GenerateDeterministicZZIJA(denom, coin, dMint);
+        zWallet.GenerateDeterministicZDAZZ(denom, coin, dMint);
         vCoins.emplace_back(coin);
     }
 

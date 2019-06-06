@@ -2,7 +2,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,18 +22,18 @@ BitcoinUnits::BitcoinUnits(QObject* parent) : QAbstractListModel(parent),
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
     QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(ZIJA);
-    unitlist.append(mZIJA);
-    unitlist.append(uZIJA);
+    unitlist.append(THEDAZZ);
+    unitlist.append(mDAZZ);
+    unitlist.append(uDAZZ);
     return unitlist;
 }
 
 bool BitcoinUnits::valid(int unit)
 {
     switch (unit) {
-    case ZIJA:
-    case mZIJA:
-    case uZIJA:
+    case THEDAZZ:
+    case mDAZZ:
+    case uDAZZ:
         return true;
     default:
         return false;
@@ -42,12 +43,12 @@ bool BitcoinUnits::valid(int unit)
 QString BitcoinUnits::id(int unit)
 {
     switch (unit) {
-    case ZIJA:
-        return QString("zija");
-    case mZIJA:
-        return QString("mzija");
-    case uZIJA:
-        return QString::fromUtf8("uzija");
+    case THEDAZZ:
+        return QString("dazzling");
+    case mDAZZ:
+        return QString("mdazzling");
+    case uDAZZ:
+        return QString::fromUtf8("udazzling");
     default:
         return QString("???");
     }
@@ -57,23 +58,23 @@ QString BitcoinUnits::name(int unit)
 {
     if (Params().NetworkID() == CBaseChainParams::MAIN) {
         switch (unit) {
-        case ZIJA:
-            return QString("ZIJA");
-        case mZIJA:
-            return QString("mZIJA");
-        case uZIJA:
-            return QString::fromUtf8("μZIJA");
+        case THEDAZZ:
+            return QString("DAZZ");
+        case mDAZZ:
+            return QString("mDAZZ");
+        case uDAZZ:
+            return QString::fromUtf8("μDAZZ");
         default:
             return QString("???");
         }
     } else {
         switch (unit) {
-        case ZIJA:
-            return QString("tZIJA");
-        case mZIJA:
-            return QString("mtZIJA");
-        case uZIJA:
-            return QString::fromUtf8("μtZIJA");
+        case THEDAZZ:
+            return QString("tDAZZ");
+        case mDAZZ:
+            return QString("mtDAZZ");
+        case uDAZZ:
+            return QString::fromUtf8("μtDAZZ");
         default:
             return QString("???");
         }
@@ -84,23 +85,23 @@ QString BitcoinUnits::description(int unit)
 {
     if (Params().NetworkID() == CBaseChainParams::MAIN) {
         switch (unit) {
-        case ZIJA:
-            return QString("ZIJA");
-        case mZIJA:
-            return QString("Milli-ZIJA (1 / 1" THIN_SP_UTF8 "000)");
-        case uZIJA:
-            return QString("Micro-ZIJA (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        case THEDAZZ:
+            return QString("DAZZ");
+        case mDAZZ:
+            return QString("Milli-DAZZ (1 / 1" THIN_SP_UTF8 "000)");
+        case uDAZZ:
+            return QString("Micro-DAZZ (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
         default:
             return QString("???");
         }
     } else {
         switch (unit) {
-        case ZIJA:
-            return QString("TestZIJAs");
-        case mZIJA:
-            return QString("Milli-TestZIJA (1 / 1" THIN_SP_UTF8 "000)");
-        case uZIJA:
-            return QString("Micro-TestZIJA (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        case THEDAZZ:
+            return QString("TestDAZZs");
+        case mDAZZ:
+            return QString("Milli-TestDAZZ (1 / 1" THIN_SP_UTF8 "000)");
+        case uDAZZ:
+            return QString("Micro-TestDAZZ (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
         default:
             return QString("???");
         }
@@ -110,11 +111,11 @@ QString BitcoinUnits::description(int unit)
 qint64 BitcoinUnits::factor(int unit)
 {
     switch (unit) {
-    case ZIJA:
+    case THEDAZZ:
         return 100000000;
-    case mZIJA:
+    case mDAZZ:
         return 100000;
-    case uZIJA:
+    case uDAZZ:
         return 100;
     default:
         return 100000000;
@@ -124,11 +125,11 @@ qint64 BitcoinUnits::factor(int unit)
 int BitcoinUnits::decimals(int unit)
 {
     switch (unit) {
-    case ZIJA:
+    case THEDAZZ:
         return 8;
-    case mZIJA:
+    case mDAZZ:
         return 5;
-    case uZIJA:
+    case uDAZZ:
         return 2;
     default:
         return 0;

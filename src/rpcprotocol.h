@@ -2,7 +2,8 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2017 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,7 +30,7 @@ enum HTTPStatusCode {
     HTTP_SERVICE_UNAVAILABLE   = 503,
 };
 
-//! ZIJA RPC error codes
+//! DAZZ RPC error codes
 enum RPCErrorCode {
     //! Standard JSON-RPC 2.0 errors
     RPC_INVALID_REQUEST     = -32600,
@@ -58,7 +59,7 @@ enum RPCErrorCode {
     RPC_TRANSACTION_ALREADY_IN_CHAIN    = RPC_VERIFY_ALREADY_IN_CHAIN,
 
     //! P2P client errors
-    RPC_CLIENT_NOT_CONNECTED            = -9, //! ZIJA is not connected
+    RPC_CLIENT_NOT_CONNECTED            = -9, //! DAZZ is not connected
     RPC_CLIENT_IN_INITIAL_DOWNLOAD      = -10, //! Still downloading initial blocks
     RPC_CLIENT_NODE_ALREADY_ADDED       = -23, //! Node is already added
     RPC_CLIENT_NODE_NOT_ADDED           = -24, //! Node has not been added before

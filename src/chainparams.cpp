@@ -3,7 +3,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -55,15 +56,12 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-      (1, uint256("00000086bda507690d143e49422e65f4544eb076e559074149fb7450526a6f5b"))
-      (50, uint256("0000001a812963bcb03a60c75322aed9e218b3d9512e2d19788e73af72a91a94"))
-      (100, uint256("00000013a7ac2cf6a751828d4e03bb99ab95f55654a4b880e3c041ecf57fc102"))
-      (505, uint256("0000002f68c3406f0535084822ab919750fb9e40417d9fa82367de0df1eecfa3"))
+      (0, uint256("00000afd53315af795bf6c8ad807a89518dd164399cfcc954b94e0a94cb11525"))
     ;
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1542176770, // * UNIX timestamp of last checkpoint block
-    526,    // * total number of transactions between genesis and last checkpoint
+    1553334304, // * UNIX timestamp of last checkpoint block
+    0,          // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the SetBestChain debug.log lines)
     2000        // * estimated number of transactions per day after checkpoint
 };
@@ -119,27 +117,27 @@ public:
         pchMessageStart[2] = 0xfd;
         pchMessageStart[3] = 0xe9;
         vAlertPubKey = ParseHex("0426d1c5aac0e7b98f37f5f8ca10a18bb915820516723a727093cca65108ac24cdf3467ff06a39ad388ccc3d83802c85df73dba14e3db3835cec6892b9647e92fa");
-        nDefaultPort = 17009;
-        bnProofOfWorkLimit = ~uint256(0) >> 20; // ZIJA starting difficulty is 1 / 2^12
+        nDefaultPort = 12991;
+        bnProofOfWorkLimit = ~uint256(0) >> 20; // DAZZ starting difficulty is 1 / 2^12
         nSubsidyHalvingInterval = 259000;
         nMaxReorganizationDepth = 100;
         nEnforceBlockUpgradeMajority = 750;
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // ZIJA: 1 day
-        nTargetSpacing = 1 * 60;  // ZIJA: 1 minute
+        nTargetTimespan = 1 * 60; // DAZZ: 1 day
+        nTargetSpacing = 1 * 60;  // DAZZ: 1 minute
         nMaturity = 30;
         nMasternodeCountDrift = 20;
-        nMaxMoneyOut = 21000000 * COIN;
-        nMNCollateral = 2525 * COIN;
-        strDevpubkey = "020270bfb5a3a91e6f90967329abcec9ba320e4067862d57078e6948481b3de7f8";
+        nMaxMoneyOut = 555000777 * COIN;
+        nMNCollateral = 40000 * COIN;
+        strDevpubkey = "020e93f3059c40456a71c6882dee25ea062679890ad8f0efa20b5cc4a896d332e1";
 
         /** Height or Time Based Activations **/
-        nLastPOWBlock = 1000;
+        nLastPOWBlock = 70;
         nModifierUpdateBlock = 1999999999;
         nZerocoinStartHeight = 250;
-        nZerocoinStartTime = 1540548888; // October 17, 2017 4:30:00 AM
+        nZerocoinStartTime = 1553334304; // October 17, 2017 4:30:00 AM
         nBlockEnforceSerialRange = 1999999999; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 1999999999; //Trigger a recalculation of accumulators
         nBlockFirstFraudulent = 1999999999; //First block that bad serials emerged
@@ -150,7 +148,7 @@ public:
         nEnforceNewSporkKey = 1999999999; //!> Sporks signed after (GMT): Tuesday, May 1, 2018 7:00:00 AM GMT must use the new spork key
         nRejectOldSporkKey = 1999999999; //!> Fully reject old spork key after (GMT): Friday, June 1, 2018 12:00:00 AM
 
-        const char* pszTimestamp = "October 26 - 5 days to Halloween 2018!";
+        const char* pszTimestamp = "03/23/2019 - 9:45 (UTC). Coin dev @SmartInsider";
         CMutableTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -161,20 +159,21 @@ public:
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime = 1540548888;
+        genesis.nTime = 1553334304;
         genesis.nBits = 0x1e0fffff;
-        genesis.nNonce = 655916;
+        genesis.nNonce = 4837147;
 
         hashGenesisBlock = genesis.GetHash();
 
-        assert(hashGenesisBlock == uint256("0x0000039024ce4efabb521257f483c0017dd98726b7109a61086de3066457fdc0"));
-        assert(genesis.hashMerkleRoot == uint256("0xea63edaa9b376a338aeeded240cb78ce7e8bba19585b2fd1b5580f649adabfcc"));
+        assert(hashGenesisBlock == uint256("00000afd53315af795bf6c8ad807a89518dd164399cfcc954b94e0a94cb11525"));
+        assert(genesis.hashMerkleRoot == uint256("7bedc2742da1212d48a940487bc7b616a388b86e81d6e4c1c2b04f100c28c19e"));
+        vSeeds.push_back(CDNSSeedData("seed1.smartinsider.club", "seed1.smartinsider.club"));
+        vSeeds.push_back(CDNSSeedData("seed2.smartinsider.club", "seed2.smartinsider.club"));
+        vSeeds.push_back(CDNSSeedData("seed3.smartinsider.club", "seed3.smartinsider.club"));
+        vSeeds.push_back(CDNSSeedData("seed4.smartinsider.club", "seed4.smartinsider.club"));
+        vSeeds.push_back(CDNSSeedData("seed5.smartinsider.club", "seed5.smartinsider.club"));
 
-        vSeeds.push_back(CDNSSeedData("seed1.zija.icu", "seed1.zija.icu"));
-        vSeeds.push_back(CDNSSeedData("seed2.zija.icu", "seed2.zija.icu"));
-        vSeeds.push_back(CDNSSeedData("seed3.zija.icu", "seed3.zija.icu"));
-
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 40);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 30);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 100);
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 153);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x02)(0x2D)(0x25)(0x33).convert_to_container<std::vector<unsigned char> >();
@@ -183,7 +182,7 @@ public:
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
-        fMiningRequiresPeers = true; 
+        fMiningRequiresPeers = false; 
         fAllowMinDifficultyBlocks = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
@@ -196,7 +195,7 @@ public:
         strSporkKey = "0404f577bf0f27840383286ed9ccb6de0331f434fc1367752e6b13a7d7ba53fb233aba934b70da91c71a5439d14c7362040a95f4d85da759def35b4dc24eaabcda";
         strSporkKeyOld = "0421fbe5c99cdf5ae07cacfc76e4fa6cd646ffba3cbaea8cb21d77a754ec684270104d60c0b561f7f9f82ba3a619487776ff5ca387d3225f51812f90655848b287";
         strObfuscationPoolDummyAddress = "D87q2gC9j6nNrnzCsg4aY6bHMLsT9nUhEw";
-        nStartMasternodePayments = 1540548888;
+        nStartMasternodePayments = 1553334304;
 
         /** Zerocoin */
         zerocoinModulus = "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
@@ -243,8 +242,8 @@ public:
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // ZIJA: 1 day
-        nTargetSpacing = 1 * 60;  // ZIJA: 1 minute
+        nTargetTimespan = 1 * 60; // DAZZ: 1 day
+        nTargetSpacing = 1 * 60;  // DAZZ: 1 minute
         nLastPOWBlock = 200;
         nMaturity = 15;
         nMasternodeCountDrift = 4;
@@ -265,31 +264,31 @@ public:
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1536062401;
 
-        genesis.nNonce = 4605838;
+        genesis.nNonce = 6335421;
 
 
 
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x00000f1a320b671b3f5119a82d087ec4d148bc057b125a220f9eee2ffb8515e0"));
+        assert(hashGenesisBlock == uint256("00000b02424cc5a63598992409bddeb4f7e0605921386bbbf6a5e9fca9e4b8e1"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("test1.zija.icu", "test1.zija.icu"));
-        vSeeds.push_back(CDNSSeedData("test2.zija.icu", "test2.zija.icu"));
+        vSeeds.push_back(CDNSSeedData("test1.dazzling.life", "test1.dazzling.life"));
+        vSeeds.push_back(CDNSSeedData("test2.dazzling.life", "test2.dazzling.life"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet zija addresses start with 'x' or 'y'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet zija script addresses start with '8' or '9'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet dazzling addresses start with 'x' or 'y'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet dazzling script addresses start with '8' or '9'
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239);     // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
-        // Testnet zija BIP32 pubkeys start with 'DRKV'
+        // Testnet dazzling BIP32 pubkeys start with 'DRKV'
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x3a)(0x80)(0x61)(0xa0).convert_to_container<std::vector<unsigned char> >();
-        // Testnet zija BIP32 prvkeys start with 'DRKP'
+        // Testnet dazzling BIP32 prvkeys start with 'DRKP'
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x3a)(0x80)(0x58)(0x37).convert_to_container<std::vector<unsigned char> >();
-        // Testnet zija BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet dazzling BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE] = boost::assign::list_of(0x80)(0x00)(0x00)(0x01).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fAllowMinDifficultyBlocks = true;
         fDefaultConsistencyChecks = false;
         fRequireStandard = true;
@@ -331,20 +330,19 @@ public:
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 1;
-        nTargetTimespan = 24 * 60 * 60; // ZIJA: 1 day
-        nTargetSpacing = 1 * 60;        // ZIJA: 1 minutes
+        nTargetTimespan = 24 * 60 * 60; // DAZZ: 1 day
+        nTargetSpacing = 1 * 60;        // DAZZ: 1 minutes
         bnProofOfWorkLimit = ~uint256(0) >> 1;
-        genesis.nTime = 1536062402;
+        genesis.nTime = 1553334304;
         genesis.nBits = 0x207fffff;
-
-        genesis.nNonce = 12345;
+        genesis.nNonce = 12347;
 
         hashGenesisBlock = genesis.GetHash();
         nDefaultPort = 51476;
 
 
 
-        assert(hashGenesisBlock == uint256("0x7c62cce364356f7337a02815e97d2d7a2e1d50a9e5134be4de439e0b5cc6116f"));
+        assert(hashGenesisBlock == uint256("64f59fc7e9412a1154efc83ef1440cca3b1c94c5ea8ace6edc49afddc405ecdb"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.

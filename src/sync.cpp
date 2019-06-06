@@ -1,7 +1,8 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2017-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,7 +25,6 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 #endif /* DEBUG_LOCKCONTENTION */
 
 #ifdef DEBUG_LOCKORDER
-//
 // Early deadlock detection.
 // Problem being solved:
 //    Thread 1 locks  A, then B, then C
@@ -33,7 +33,6 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 // Solution implemented here:
 // Keep track of pairs of locks: (A before B), (A before C), etc.
 // Complain if any thread tries to lock in a different order.
-//
 
 struct CLockLocation {
     CLockLocation(const char* pszName, const char* pszFile, int nLine, bool fTryIn)

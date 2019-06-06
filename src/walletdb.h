@@ -2,7 +2,8 @@
 // Copyright (c) 2009-2013 The Bitcoin developers
 // Copyright (c) 2016-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -177,14 +178,14 @@ public:
     bool ReadZerocoinSpendSerialEntry(const CBigNum& bnSerial);
     bool WriteCurrentSeedHash(const uint256& hashSeed);
     bool ReadCurrentSeedHash(uint256& hashSeed);
-    bool WriteZZIJASeed(const uint256& hashSeed, const vector<unsigned char>& seed);
-    bool ReadZZIJASeed(const uint256& hashSeed, vector<unsigned char>& seed);
-    bool ReadZZIJASeed_deprecated(uint256& seed);
-    bool EraseZZIJASeed();
-    bool EraseZZIJASeed_deprecated();
+    bool WriteZDAZZSeed(const uint256& hashSeed, const vector<unsigned char>& seed);
+    bool ReadZDAZZSeed(const uint256& hashSeed, vector<unsigned char>& seed);
+    bool ReadZDAZZSeed_deprecated(uint256& seed);
+    bool EraseZDAZZSeed();
+    bool EraseZDAZZSeed_deprecated();
 
-    bool WriteZZIJACount(const uint32_t& nCount);
-    bool ReadZZIJACount(uint32_t& nCount);
+    bool WriteZDAZZCount(const uint32_t& nCount);
+    bool ReadZDAZZCount(uint32_t& nCount);
     std::map<uint256, std::vector<pair<uint256, uint32_t> > > MapMintPool();
     bool WriteMintPoolPair(const uint256& hashMasterSeed, const uint256& hashPubcoin, const uint32_t& nCount);
 

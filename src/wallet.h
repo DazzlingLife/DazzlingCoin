@@ -3,7 +3,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -86,12 +87,12 @@ enum AvailableCoinsType {
     ALL_COINS = 1,
     ONLY_DENOMINATED = 2,
     ONLY_NOT10000IFMN = 3,
-    ONLY_NONDENOMINATED_NOT10000IFMN = 4, // ONLY_NONDENOMINATED and not 10000 ZIJA at the same time
+    ONLY_NONDENOMINATED_NOT10000IFMN = 4, // ONLY_NONDENOMINATED and not 10000 DAZZ at the same time
     ONLY_10000 = 5,                        // find masternode outputs including locked ones (use with caution)
     STAKABLE_COINS = 6                          // UTXO's that are valid for staking
 };
 
-// Possible states for zZIJA send
+// Possible states for zDAZZ send
 enum ZerocoinSpendStatus {
     ZZIJA_SPEND_OKAY = 0,                            // No error
     ZZIJA_SPEND_ERROR = 1,                           // Unspecified class of errors, more details are (hopefully) in the returning text
@@ -107,7 +108,7 @@ enum ZerocoinSpendStatus {
     ZZIJA_FAILED_ACCUMULATOR_INITIALIZATION = 11,    // Failed to initialize witness
     ZZIJA_INVALID_WITNESS = 12,                      // Spend coin transaction did not verify
     ZZIJA_BAD_SERIALIZATION = 13,                    // Transaction verification failed
-    ZZIJA_SPENT_USED_ZZIJA = 14,                      // Coin has already been spend
+    ZZIJA_SPENT_USED_ZDAZZ = 14,                      // Coin has already been spend
     ZZIJA_TX_TOO_LARGE = 15,                          // The transaction is larger than the max tx size
     ZZIJA_SPEND_V1_SEC_LEVEL                         // Spend is V1 and security level is not set to 100
 };
@@ -215,9 +216,9 @@ public:
     std::string ResetMintZerocoin();
     std::string ResetSpentZerocoin();
     void ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored, std::list<CDeterministicMint>& listDMintsRestored);
-    void ZZijaBackupWallet();
+    void ZDazzlingBackupWallet();
     bool GetZerocoinKey(const CBigNum& bnSerial, CKey& key);
-    bool CreateZZIJAOutPut(libzerocoin::CoinDenomination denomination, CTxOut& outMint, CDeterministicMint& dMint);
+    bool CreateZDAZZOutPut(libzerocoin::CoinDenomination denomination, CTxOut& outMint, CDeterministicMint& dMint);
     bool GetMint(const uint256& hashSerial, CZerocoinMint& mint);
     bool GetMintFromStakeHash(const uint256& hashStake, CZerocoinMint& mint);
     bool DatabaseMint(CDeterministicMint& dMint);
@@ -239,13 +240,13 @@ public:
      */
     mutable CCriticalSection cs_wallet;
 
-    CzZIJAWallet* zwalletMain;
+    CzDAZZWallet* zwalletMain;
 
     bool fFileBacked;
     bool fWalletUnlockAnonymizeOnly;
     std::string strWalletFile;
     bool fBackupMints;
-    std::unique_ptr<CzZIJATracker> zpivTracker;
+    std::unique_ptr<CzDAZZTracker> zpivTracker;
 
     std::set<int64_t> setKeyPool;
     std::map<CKeyID, CKeyMetadata> mapKeyMetadata;
@@ -330,20 +331,20 @@ public:
         return nZeromintPercentage;
     }
 
-    void setZWallet(CzZIJAWallet* zwallet)
+    void setZWallet(CzDAZZWallet* zwallet)
     {
         zwalletMain = zwallet;
-        zpivTracker = std::unique_ptr<CzZIJATracker>(new CzZIJATracker(strWalletFile));
+        zpivTracker = std::unique_ptr<CzDAZZTracker>(new CzDAZZTracker(strWalletFile));
     }
 
-    CzZIJAWallet* getZWallet() { return zwalletMain; }
+    CzDAZZWallet* getZWallet() { return zwalletMain; }
 
     bool isZeromintEnabled()
     {
         return fEnableZeromint;
     }
 
-    void setZZijaAutoBackups(bool fEnabled)
+    void setZDazzlingAutoBackups(bool fEnabled)
     {
         fBackupMints = fEnabled;
     }
@@ -671,8 +672,8 @@ public:
     /** MultiSig address added */
     boost::signals2::signal<void(bool fHaveMultiSig)> NotifyMultiSigChanged;
 
-    /** zZIJA reset */
-    boost::signals2::signal<void()> NotifyzZIJAReset;
+    /** zDAZZ reset */
+    boost::signals2::signal<void()> NotifyzDAZZReset;
 
     /** notify wallet file backed up */
     boost::signals2::signal<void (const bool& fSuccess, const std::string& filename)> NotifyWalletBacked;

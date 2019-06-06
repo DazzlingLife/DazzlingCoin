@@ -2,7 +2,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -77,15 +78,15 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     }
 
     // Set checkbox "For anonymization, automint, and staking only" depending on from where we were called
-    if (context == Context::Unlock_Menu || context == Context::Mint_zZIJA || context == Context::BIP_38) {
+    if (context == Context::Unlock_Menu || context == Context::Mint_zDAZZ || context == Context::BIP_38) {
         ui->anonymizationCheckBox->setChecked(true);
     }
     else {
         ui->anonymizationCheckBox->setChecked(false);
     }
 
-    // It doesn't make sense to show the checkbox for sending ZIJA because you wouldn't check it anyway.
-    if (context == Context::Send_ZIJA || context == Context::Send_zZIJA) {
+    // It doesn't make sense to show the checkbox for sending DAZZ because you wouldn't check it anyway.
+    if (context == Context::Send_ZIJA || context == Context::Send_zDAZZ) {
         ui->anonymizationCheckBox->hide();
     }
 
@@ -125,7 +126,7 @@ void AskPassphraseDialog::accept()
             break;
         }
         QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm wallet encryption"),
-            tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR ZIJA</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
+            tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR DAZZ</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
             QMessageBox::Yes | QMessageBox::Cancel,
             QMessageBox::Cancel);
         if (retval == QMessageBox::Yes) {
@@ -133,9 +134,9 @@ void AskPassphraseDialog::accept()
                 if (model->setWalletEncrypted(true, newpass1)) {
                     QMessageBox::warning(this, tr("Wallet encrypted"),
                         "<qt>" +
-                            tr("ZIJA will close now to finish the encryption process. "
+                            tr("DAZZ will close now to finish the encryption process. "
                                "Remember that encrypting your wallet cannot fully protect "
-                               "your ZIJAs from being stolen by malware infecting your computer.") +
+                               "your DAZZs from being stolen by malware infecting your computer.") +
                             "<br><br><b>" +
                             tr("IMPORTANT: Any previous backups you have made of your wallet file "
                                "should be replaced with the newly generated, encrypted wallet file. "

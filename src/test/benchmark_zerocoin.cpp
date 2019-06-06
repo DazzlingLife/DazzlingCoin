@@ -10,7 +10,8 @@
  * @license    This project is released under the MIT license.
  **/
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2017-2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 
 #include <boost/test/unit_test.hpp>
 #include <string>

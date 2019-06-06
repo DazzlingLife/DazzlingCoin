@@ -2,12 +2,13 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/zija-config.h"
+#include "config/dazzling-config.h"
 #endif
 
 #include "optionsmodel.h"
@@ -64,7 +65,7 @@ void OptionsModel::Init()
 
     // Display
     if (!settings.contains("nDisplayUnit"))
-        settings.setValue("nDisplayUnit", BitcoinUnits::ZIJA);
+        settings.setValue("nDisplayUnit", BitcoinUnits::THEDAZZ);
     nDisplayUnit = settings.value("nDisplayUnit").toInt();
 
     if (!settings.contains("strThirdPartyTxUrls"))
@@ -77,7 +78,7 @@ void OptionsModel::Init()
 
     if (!settings.contains("fCoinControlFeatures"))
         settings.setValue("fCoinControlFeatures", false);
-    fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
+    fCoinControlFeatures = settings.value("fCoinControlFeatures").toBool();
 
     if (!settings.contains("fZeromintEnable"))
         settings.setValue("fZeromintEnable", false);
@@ -91,10 +92,10 @@ void OptionsModel::Init()
         settings.setValue("nPreferredDenom", 0);
     nPreferredDenom = settings.value("nPreferredDenom", "0").toLongLong();
 
-    if (!settings.contains("nAnonymizeZijaAmount"))
-        settings.setValue("nAnonymizeZijaAmount", 1000);
+    if (!settings.contains("nAnonymizeDazzlingAmount"))
+        settings.setValue("nAnonymizeDazzlingAmount", 1000);
 
-    nAnonymizeZijaAmount = settings.value("nAnonymizeZijaAmount").toLongLong();
+    nAnonymizeDazzlingAmount = settings.value("nAnonymizeDazzlingAmount").toLongLong();
 
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
@@ -168,8 +169,8 @@ void OptionsModel::Init()
         SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
     if (settings.contains("nPreferredDenom"))
         SoftSetArg("-preferredDenom", settings.value("nPreferredDenom").toString().toStdString());
-    if (settings.contains("nAnonymizeZijaAmount"))
-        SoftSetArg("-anonymizezijaamount", settings.value("nAnonymizeZijaAmount").toString().toStdString());
+    if (settings.contains("nAnonymizeDazzlingAmount"))
+        SoftSetArg("-anonymizedazzlingamount", settings.value("nAnonymizeDazzlingAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -180,7 +181,7 @@ void OptionsModel::Reset()
 
     // Remove all entries from our QSettings object
     settings.clear();
-    resetSettings = true; // Needed in zija.cpp during shotdown to also remove the window positions
+    resetSettings = true; // Needed in dazzling.cpp during shotdown to also remove the window positions
 
     // default setting for OptionsModel::StartAtStartup - disabled
     if (GUIUtil::GetStartOnSystemStartup())
@@ -260,8 +261,8 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return QVariant(nZeromintPercentage);
         case ZeromintPrefDenom:
             return QVariant(nPreferredDenom);
-        case AnonymizeZijaAmount:
-            return QVariant(nAnonymizeZijaAmount);
+        case AnonymizeDazzlingAmount:
+            return QVariant(nAnonymizeDazzlingAmount);
         case Listen:
             return settings.value("fListen");
         default:
@@ -390,10 +391,10 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
             emit hideZeroBalancesChanged(fHideZeroBalances);
             break;
 
-        case AnonymizeZijaAmount:
-            nAnonymizeZijaAmount = value.toInt();
-            settings.setValue("nAnonymizeZijaAmount", nAnonymizeZijaAmount);
-            emit anonymizeZijaAmountChanged(nAnonymizeZijaAmount);
+        case AnonymizeDazzlingAmount:
+            nAnonymizeDazzlingAmount = value.toInt();
+            settings.setValue("nAnonymizeDazzlingAmount", nAnonymizeDazzlingAmount);
+            emit anonymizeDazzlingAmountChanged(nAnonymizeDazzlingAmount);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();

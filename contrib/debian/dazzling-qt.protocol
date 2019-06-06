@@ -1,0 +1,11 @@
+[Protocol]
+exec=dazzling-qt '%u'
+protocol=dazzling
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false

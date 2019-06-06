@@ -1,5 +1,5 @@
 ---
-name: "zija-dmg-signer"
+name: "dazzling-dmg-signer"
 suites:
 - "trusty"
 architectures:
@@ -7,10 +7,10 @@ architectures:
 packages:
 - "faketime"
 remotes:
-- "url": "https://github.com/zija-project/zija-detached-sigs.git"
+- "url": "https://github.com/dazzling-project/dazzling-detached-sigs.git"
   "dir": "signature"
 files:
-- "zija-osx-unsigned.tar.gz"
+- "dazzling-osx-unsigned.tar.gz"
 script: |
   WRAP_DIR=$HOME/wrapped
   mkdir -p ${WRAP_DIR}
@@ -27,11 +27,11 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=zija-osx-unsigned.tar.gz
-  SIGNED=zija-osx-signed.dmg
+  UNSIGNED=dazzling-osx-unsigned.tar.gz
+  SIGNED=dazzling-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
   OSX_VOLNAME="$(cat osx_volname)"
   ./detached-sig-apply.sh ${UNSIGNED} signature/osx
-  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Zija-Qt" -no-pad -r -dir-mode 0755 -apple -o uncompressed.dmg signed-app
+  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Dazzling-Qt" -no-pad -r -dir-mode 0755 -apple -o uncompressed.dmg signed-app
   ${WRAP_DIR}/dmg dmg uncompressed.dmg ${OUTDIR}/${SIGNED}

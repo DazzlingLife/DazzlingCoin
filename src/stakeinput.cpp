@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +12,7 @@
 #include "stakeinput.h"
 #include "wallet.h"
 
-CZZijaStake::CZZijaStake(const libzerocoin::CoinSpend& spend)
+CZDazzlingStake::CZDazzlingStake(const libzerocoin::CoinSpend& spend)
 {
     this->nChecksum = spend.getAccumulatorChecksum();
     this->denom = spend.getDenomination();
@@ -21,7 +22,7 @@ CZZijaStake::CZZijaStake(const libzerocoin::CoinSpend& spend)
     fMint = false;
 }
 
-int CZZijaStake::GetChecksumHeightFromMint()
+int CZDazzlingStake::GetChecksumHeightFromMint()
 {
     int nHeightChecksum = chainActive.Height() - Params().Zerocoin_RequiredStakeDepth();
 
@@ -32,20 +33,20 @@ int CZZijaStake::GetChecksumHeightFromMint()
     return GetChecksumHeight(nChecksum, denom);
 }
 
-int CZZijaStake::GetChecksumHeightFromSpend()
+int CZDazzlingStake::GetChecksumHeightFromSpend()
 {
     return GetChecksumHeight(nChecksum, denom);
 }
 
-uint32_t CZZijaStake::GetChecksum()
+uint32_t CZDazzlingStake::GetChecksum()
 {
     return nChecksum;
 }
 
-// The zZIJA block index is the first appearance of the accumulator checksum that was used in the spend
+// The zDAZZ block index is the first appearance of the accumulator checksum that was used in the spend
 // note that this also means when staking that this checksum should be from a block that is beyond 60 minutes old and
 // 100 blocks deep.
-CBlockIndex* CZZijaStake::GetIndexFrom()
+CBlockIndex* CZDazzlingStake::GetIndexFrom()
 {
     if (pindexFrom)
         return pindexFrom;
@@ -67,13 +68,13 @@ CBlockIndex* CZZijaStake::GetIndexFrom()
     return pindexFrom;
 }
 
-CAmount CZZijaStake::GetValue()
+CAmount CZDazzlingStake::GetValue()
 {
     return denom * COIN;
 }
 
 //Use the first accumulator checkpoint that occurs 60 minutes after the block being staked from
-bool CZZijaStake::GetModifier(uint64_t& nStakeModifier)
+bool CZDazzlingStake::GetModifier(uint64_t& nStakeModifier)
 {
     CBlockIndex* pindex = GetIndexFrom();
     if (!pindex)
@@ -93,15 +94,15 @@ bool CZZijaStake::GetModifier(uint64_t& nStakeModifier)
     }
 }
 
-CDataStream CZZijaStake::GetUniqueness()
+CDataStream CZDazzlingStake::GetUniqueness()
 {
-    //The unique identifier for a zZIJA is a hash of the serial
+    //The unique identifier for a zDAZZ is a hash of the serial
     CDataStream ss(SER_GETHASH, 0);
     ss << hashSerial;
     return ss;
 }
 
-bool CZZijaStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
+bool CZDazzlingStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
 {
     CBlockIndex* pindexCheckpoint = GetIndexFrom();
     if (!pindexCheckpoint)
@@ -122,25 +123,25 @@ bool CZZijaStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
     return true;
 }
 
-bool CZZijaStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal)
+bool CZDazzlingStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal)
 {
-    //Create an output returning the zZIJA that was staked
+    //Create an output returning the zDAZZ that was staked
     CTxOut outReward;
     libzerocoin::CoinDenomination denomStaked = libzerocoin::AmountToZerocoinDenomination(this->GetValue());
     CDeterministicMint dMint;
-    if (!pwallet->CreateZZIJAOutPut(denomStaked, outReward, dMint))
-        return error("%s: failed to create zZIJA output", __func__);
+    if (!pwallet->CreateZDAZZOutPut(denomStaked, outReward, dMint))
+        return error("%s: failed to create zDAZZ output", __func__);
     vout.emplace_back(outReward);
 
     //Add new staked denom to our wallet
     if (!pwallet->DatabaseMint(dMint))
-        return error("%s: failed to database the staked zZIJA", __func__);
+        return error("%s: failed to database the staked zDAZZ", __func__);
 
     for (unsigned int i = 0; i < 3; i++) {
         CTxOut out;
         CDeterministicMint dMintReward;
-        if (!pwallet->CreateZZIJAOutPut(libzerocoin::CoinDenomination::ZQ_ONE, out, dMintReward))
-            return error("%s: failed to create zZIJA output", __func__);
+        if (!pwallet->CreateZDAZZOutPut(libzerocoin::CoinDenomination::ZQ_ONE, out, dMintReward))
+            return error("%s: failed to create zDAZZ output", __func__);
         vout.emplace_back(out);
 
         if (!pwallet->DatabaseMint(dMintReward))
@@ -150,14 +151,14 @@ bool CZZijaStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount n
     return true;
 }
 
-bool CZZijaStake::GetTxFrom(CTransaction& tx)
+bool CZDazzlingStake::GetTxFrom(CTransaction& tx)
 {
     return false;
 }
 
-bool CZZijaStake::MarkSpent(CWallet *pwallet, const uint256& txid)
+bool CZDazzlingStake::MarkSpent(CWallet *pwallet, const uint256& txid)
 {
-    CzZIJATracker* zpivTracker = pwallet->zpivTracker.get();
+    CzDAZZTracker* zpivTracker = pwallet->zpivTracker.get();
     CMintMeta meta;
     if (!zpivTracker->GetMetaFromStakeHash(hashSerial, meta))
         return error("%s: tracker does not have serialhash", __func__);
@@ -166,32 +167,32 @@ bool CZZijaStake::MarkSpent(CWallet *pwallet, const uint256& txid)
     return true;
 }
 
-//!ZIJA Stake
-bool CZijaStake::SetInput(CTransaction txPrev, unsigned int n)
+//!DAZZ Stake
+bool CDazzlingStake::SetInput(CTransaction txPrev, unsigned int n)
 {
     this->txFrom = txPrev;
     this->nPosition = n;
     return true;
 }
 
-bool CZijaStake::GetTxFrom(CTransaction& tx)
+bool CDazzlingStake::GetTxFrom(CTransaction& tx)
 {
     tx = txFrom;
     return true;
 }
 
-bool CZijaStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
+bool CDazzlingStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
 {
     txIn = CTxIn(txFrom.GetHash(), nPosition);
     return true;
 }
 
-CAmount CZijaStake::GetValue()
+CAmount CDazzlingStake::GetValue()
 {
     return txFrom.vout[nPosition].nValue;
 }
 
-bool CZijaStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal)
+bool CDazzlingStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal)
 {
     vector<valtype> vSolutions;
     txnouttype whichType;
@@ -226,7 +227,7 @@ bool CZijaStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nT
     return true;
 }
 
-bool CZijaStake::GetModifier(uint64_t& nStakeModifier)
+bool CDazzlingStake::GetModifier(uint64_t& nStakeModifier)
 {
     int nStakeModifierHeight = 0;
     int64_t nStakeModifierTime = 0;
@@ -240,16 +241,16 @@ bool CZijaStake::GetModifier(uint64_t& nStakeModifier)
     return true;
 }
 
-CDataStream CZijaStake::GetUniqueness()
+CDataStream CDazzlingStake::GetUniqueness()
 {
-    //The unique identifier for a ZIJA stake is the outpoint
+    //The unique identifier for a DAZZ stake is the outpoint
     CDataStream ss(SER_NETWORK, 0);
     ss << nPosition << txFrom.GetHash();
     return ss;
 }
 
 //The block that the UTXO was added to the chain
-CBlockIndex* CZijaStake::GetIndexFrom()
+CBlockIndex* CDazzlingStake::GetIndexFrom()
 {
     uint256 hashBlock = 0;
     CTransaction tx;

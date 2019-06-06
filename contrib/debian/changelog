@@ -365,8 +365,8 @@ bitcoin (0.3.19~dfsg-5) unstable; urgency=low
 bitcoin (0.3.19~dfsg-4) unstable; urgency=low
 
   [ Micah Anderson ]
-  * Provide example zija.conf.
-  * Add bitcoind(1) and zija.conf(5) man pages.
+  * Provide example dazzling.conf.
+  * Add bitcoind(1) and dazzling.conf(5) man pages.
 
   [ Jonas Smedegaard ]
   * Ease backporting:

@@ -1,0 +1,26 @@
+[Unit]
+Description=DAZZ's distributed currency daemon
+After=network.target
+
+[Service]
+User=dazzling
+Group=dazzling
+
+Type=forking
+PIDFile=/var/lib/dazzlingd/dazzlingd.pid
+
+ExecStart=/usr/bin/dazzlingd -daemon -pid=/var/lib/dazzlingd/dazzlingd.pid \
+          -conf=/etc/dazzling/dazzling.conf -datadir=/var/lib/dazzlingd
+
+ExecStop=-/usr/bin/dazzling-cli -conf=/etc/dazzling/dazzling.conf \
+         -datadir=/var/lib/dazzlingd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

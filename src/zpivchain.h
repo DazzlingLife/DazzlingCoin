@@ -1,11 +1,12 @@
 // Copyright (c) 2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZIJA_ZZIJACHAIN_H
-#define ZIJA_ZZIJACHAIN_H
+#ifndef ZIJA_ZDAZZCHAIN_H
+#define ZIJA_ZDAZZCHAIN_H
 
 #include "libzerocoin/Coin.h"
 #include "libzerocoin/Denominations.h"
@@ -41,4 +42,4 @@ bool TxOutToPublicCoin(const CTxOut& txout, libzerocoin::PublicCoin& pubCoin, CV
 std::list<libzerocoin::CoinDenomination> ZerocoinSpendListFromBlock(const CBlock& block, bool fFilterInvalid);
 
 
-#endif //ZIJA_ZZIJACHAIN_H
+#endif //ZIJA_ZDAZZCHAIN_H

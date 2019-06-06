@@ -3,7 +3,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -265,11 +266,11 @@ UniValue stop(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop ZIJA server.");
+            "\nStop DAZZ server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "ZIJA server stopping";
+    return "DAZZ server stopping";
 }
 
 
@@ -353,37 +354,37 @@ static const CRPCCommand vRPCCommands[] =
         {"hidden", "reconsiderblock", &reconsiderblock, true, true, false},
         {"hidden", "setmocktime", &setmocktime, true, false, false},
 
-        /* ZIJA features */
-        {"zija", "masternode", &masternode, true, true, false},
-        {"zija", "listmasternodes", &listmasternodes, true, true, false},
-        {"zija", "getmasternodecount", &getmasternodecount, true, true, false},
-        {"zija", "masternodeconnect", &masternodeconnect, true, true, false},
-        {"zija", "createmasternodebroadcast", &createmasternodebroadcast, true, true, false},
-        {"zija", "decodemasternodebroadcast", &decodemasternodebroadcast, true, true, false},
-        {"zija", "relaymasternodebroadcast", &relaymasternodebroadcast, true, true, false},
-        {"zija", "masternodecurrent", &masternodecurrent, true, true, false},
-        {"zija", "masternodedebug", &masternodedebug, true, true, false},
-        {"zija", "startmasternode", &startmasternode, true, true, false},
-        {"zija", "createmasternodekey", &createmasternodekey, true, true, false},
-        {"zija", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
-        {"zija", "listmasternodeconf", &listmasternodeconf, true, true, false},
-        {"zija", "getmasternodestatus", &getmasternodestatus, true, true, false},
-        {"zija", "getmasternodewinners", &getmasternodewinners, true, true, false},
-        {"zija", "getmasternodescores", &getmasternodescores, true, true, false},
-        {"zija", "mnbudget", &mnbudget, true, true, false},
-        {"zija", "preparebudget", &preparebudget, true, true, false},
-        {"zija", "submitbudget", &submitbudget, true, true, false},
-        {"zija", "mnbudgetvote", &mnbudgetvote, true, true, false},
-        {"zija", "getbudgetvotes", &getbudgetvotes, true, true, false},
-        {"zija", "getnextsuperblock", &getnextsuperblock, true, true, false},
-        {"zija", "getbudgetprojection", &getbudgetprojection, true, true, false},
-        {"zija", "getbudgetinfo", &getbudgetinfo, true, true, false},
-        {"zija", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
-        {"zija", "mnfinalbudget", &mnfinalbudget, true, true, false},
-        {"zija", "checkbudgets", &checkbudgets, true, true, false},
-        {"zija", "mnsync", &mnsync, true, true, false},
-        {"zija", "spork", &spork, true, true, false},
-        {"zija", "getpoolinfo", &getpoolinfo, true, true, false},
+        /* DAZZ features */
+        {"dazzling", "masternode", &masternode, true, true, false},
+        {"dazzling", "listmasternodes", &listmasternodes, true, true, false},
+        {"dazzling", "getmasternodecount", &getmasternodecount, true, true, false},
+        {"dazzling", "masternodeconnect", &masternodeconnect, true, true, false},
+        {"dazzling", "createmasternodebroadcast", &createmasternodebroadcast, true, true, false},
+        {"dazzling", "decodemasternodebroadcast", &decodemasternodebroadcast, true, true, false},
+        {"dazzling", "relaymasternodebroadcast", &relaymasternodebroadcast, true, true, false},
+        {"dazzling", "masternodecurrent", &masternodecurrent, true, true, false},
+        {"dazzling", "masternodedebug", &masternodedebug, true, true, false},
+        {"dazzling", "startmasternode", &startmasternode, true, true, false},
+        {"dazzling", "createmasternodekey", &createmasternodekey, true, true, false},
+        {"dazzling", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
+        {"dazzling", "listmasternodeconf", &listmasternodeconf, true, true, false},
+        {"dazzling", "getmasternodestatus", &getmasternodestatus, true, true, false},
+        {"dazzling", "getmasternodewinners", &getmasternodewinners, true, true, false},
+        {"dazzling", "getmasternodescores", &getmasternodescores, true, true, false},
+        {"dazzling", "mnbudget", &mnbudget, true, true, false},
+        {"dazzling", "preparebudget", &preparebudget, true, true, false},
+        {"dazzling", "submitbudget", &submitbudget, true, true, false},
+        {"dazzling", "mnbudgetvote", &mnbudgetvote, true, true, false},
+        {"dazzling", "getbudgetvotes", &getbudgetvotes, true, true, false},
+        {"dazzling", "getnextsuperblock", &getnextsuperblock, true, true, false},
+        {"dazzling", "getbudgetprojection", &getbudgetprojection, true, true, false},
+        {"dazzling", "getbudgetinfo", &getbudgetinfo, true, true, false},
+        {"dazzling", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
+        {"dazzling", "mnfinalbudget", &mnfinalbudget, true, true, false},
+        {"dazzling", "checkbudgets", &checkbudgets, true, true, false},
+        {"dazzling", "mnsync", &mnsync, true, true, false},
+        {"dazzling", "spork", &spork, true, true, false},
+        {"dazzling", "getpoolinfo", &getpoolinfo, true, true, false},
 
 #ifdef ENABLE_WALLET
         /* Wallet */
@@ -616,14 +617,14 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(string methodname, string args)
 {
-    return "> zija-cli " + methodname + " " + args + "\n";
+    return "> dazzling-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(string methodname, string args)
 {
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\":\"curltest\", "
            "\"method\": \"" +
-           methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:51993/\n";
+           methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:12992/\n";
 }
 
 void RPCRegisterTimerInterface(RPCTimerInterface *iface)

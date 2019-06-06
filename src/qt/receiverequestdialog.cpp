@@ -1,7 +1,8 @@
 // Copyright (c) 2011-2013 The Bitcoin developers
 // Copyright (c) 2017 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -25,7 +26,7 @@
 #endif
 
 #if defined(HAVE_CONFIG_H)
-#include "config/zija-config.h" /* for USE_QRCODE */
+#include "config/dazzling-config.h" /* for USE_QRCODE */
 #endif
 
 #ifdef USE_QRCODE

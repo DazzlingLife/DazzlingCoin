@@ -3,12 +3,13 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/zija-config.h"
+#include "config/dazzling-config.h"
 #endif
 
 #include "util.h"
@@ -107,7 +108,7 @@ std::string to_internal(const std::string&);
 
 using namespace std;
 
-// ZIJA only features
+// DAZZ only features
 // Masternode
 bool fMasterNode = false;
 string strMasterNodePrivKey = "";
@@ -122,7 +123,7 @@ int nZeromintPercentage = 10;
 int nPreferredDenom = 0;
 const int64_t AUTOMINT_DELAY = (60 * 5); // Wait at least 5 minutes until Automint starts
 
-int nAnonymizeZijaAmount = 1000;
+int nAnonymizeDazzlingAmount = 1000;
 int nLiquidityProvider = 0;
 /** Spork enforcement enabled time */
 int64_t enforceMasternodePaymentsTime = 4085657524;
@@ -239,8 +240,8 @@ bool LogAcceptCategory(const char* category)
             const vector<string>& categories = mapMultiArgs["-debug"];
             ptrCategory.reset(new set<string>(categories.begin(), categories.end()));
             // thread_specific_ptr automatically deletes the set when the thread ends.
-            // "zija" is a composite category enabling all ZIJA-related debug output
-            if (ptrCategory->count(string("zija"))) {
+            // "dazzling" is a composite category enabling all DAZZ-related debug output
+            if (ptrCategory->count(string("dazzling"))) {
                 ptrCategory->insert(string("obfuscation"));
                 ptrCategory->insert(string("swiftx"));
                 ptrCategory->insert(string("masternode"));
@@ -407,7 +408,7 @@ static std::string FormatException(std::exception* pex, const char* pszThread)
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "zija";
+    const char* pszModule = "dazzling";
 #endif
     if (pex)
         return strprintf(
@@ -428,13 +429,13 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-// Windows < Vista: C:\Documents and Settings\Username\Application Data\ZIJA
-// Windows >= Vista: C:\Users\Username\AppData\Roaming\ZIJA
-// Mac: ~/Library/Application Support/ZIJA
-// Unix: ~/.zija
+// Windows < Vista: C:\Documents and Settings\Username\Application Data\DAZZ
+// Windows >= Vista: C:\Users\Username\AppData\Roaming\DAZZ
+// Mac: ~/Library/Application Support/DAZZ
+// Unix: ~/.dazzling
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "ZIJA";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "DAZZ";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -446,10 +447,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "ZIJA";
+    return pathRet / "DAZZ";
 #else
     // Unix
-    return pathRet / ".zija";
+    return pathRet / ".dazzling";
 #endif
 #endif
 }
@@ -496,7 +497,7 @@ void ClearDatadirCache()
 
 boost::filesystem::path GetConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-conf", "zija.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-conf", "dazzling.conf"));
     if (!pathConfigFile.is_complete())
         pathConfigFile = GetDataDir(false) / pathConfigFile;
 
@@ -515,7 +516,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good()) {
-        // Create empty zija.conf if it does not exist
+        // Create empty dazzling.conf if it does not exist
         FILE* configFile = fopen(GetConfigFile().string().c_str(), "a");
         if (configFile != NULL) {
             unsigned char rand_pwd[32];
@@ -536,8 +537,8 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
             strHeader += rpc_user;
             strHeader += "\nrpcpassword=";
             strHeader += rpc_passwd;
-            strHeader += "\naddnode=seed1.zija.icu\naddnode=seed2.zija.icu\naddnode=seed3.zija.icu\n";
-            strHeader += "txindex=1\nzijastake=1\n";
+            strHeader += "\naddnode=seed1.smartinsider.club\naddnode=seed2.smartinsider.club\naddnode=seed3.smartinsider.club\naddnode=seed4.smartinsider.club\naddnode=seed5.smartinsider.club\n";
+            strHeader += "txindex=1\ndazzlingstake=1\n";
             fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
             fclose(configFile);
         }
@@ -549,7 +550,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     setOptions.insert("*");
 
     for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
-        // Don't overwrite existing settings so command line settings override zija.conf
+        // Don't overwrite existing settings so command line settings override dazzling.conf
         string strKey = string("-") + it->string_key;
         string strValue = it->value[0];
         InterpretNegativeSetting(strKey, strValue);
@@ -564,7 +565,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 #ifndef WIN32
 boost::filesystem::path GetPidFile()
 {
-    boost::filesystem::path pathPidFile(GetArg("-pid", "zijad.pid"));
+    boost::filesystem::path pathPidFile(GetArg("-pid", "dazzlingd.pid"));
     if (!pathPidFile.is_complete()) pathPidFile = GetDataDir() / pathPidFile;
     return pathPidFile;
 }

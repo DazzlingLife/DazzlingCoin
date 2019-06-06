@@ -2,7 +2,8 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,7 +38,7 @@ class TxViewDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
-    TxViewDelegate() : QAbstractItemDelegate(), unit(BitcoinUnits::ZIJA)
+    TxViewDelegate() : QAbstractItemDelegate(), unit(BitcoinUnits::THEDAZZ)
     {
     }
 
@@ -165,7 +166,7 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBalance, QString& sZIJAPercentage, QString& szZIJAPercentage)
+void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBalance, QString& sDAZZPercentage, QString& szDAZZPercentage)
 {
     int nPrecision = 2;
     double dzPercentage = 0.0;
@@ -184,8 +185,8 @@ void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBala
 
     double dPercentage = 100.0 - dzPercentage;
     
-    szZIJAPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
-    sZIJAPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
+    szDAZZPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
+    sDAZZPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
     
 }
 
@@ -209,13 +210,13 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         nLockedBalance = pwalletMain->GetLockedCoins();
         nWatchOnlyLockedBalance = pwalletMain->GetLockedWatchOnlyBalance();
     }
-    // ZIJA Balance
+    // DAZZ Balance
     CAmount nTotalBalance = balance + unconfirmedBalance + nLockedBalance;
     CAmount pivAvailableBalance = balance - immatureBalance;
     CAmount nTotalWatchBalance = watchOnlyBalance + watchUnconfBalance + watchImmatureBalance;    
     CAmount nUnlockedBalance = nTotalBalance - nLockedBalance - nLockedBalance; // increment nLockedBalance twice because it was added to
                                                                                 // nTotalBalance above
-    // zZIJA Balance
+    // zDAZZ Balance
     CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
     // Percentages
     QString szPercentage = "";
@@ -225,7 +226,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     CAmount availableTotalBalance = pivAvailableBalance + matureZerocoinBalance;
     CAmount sumTotalBalance = nTotalBalance + zerocoinBalance;
 
-    // ZIJA labels
+    // DAZZ labels
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, pivAvailableBalance, false, BitcoinUnits::separatorAlways));
     ui->labelUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, unconfirmedBalance, false, BitcoinUnits::separatorAlways));
     ui->labelImmature->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, immatureBalance, false, BitcoinUnits::separatorAlways));
@@ -248,18 +249,18 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     QSettings settings;
     bool settingShowAllBalances = !settings.value("fHideZeroBalances").toBool();
     bool showSumAvailable = settingShowAllBalances || sumTotalBalance != availableTotalBalance;
-    bool showZIJAAvailable = settingShowAllBalances || pivAvailableBalance != nTotalBalance;
-    bool showWatchOnlyZIJAAvailable = watchOnlyBalance != nTotalWatchBalance;
-    bool showZIJAPending = settingShowAllBalances || unconfirmedBalance != 0;
-    bool showWatchOnlyZIJAPending = watchUnconfBalance != 0;
-    bool showZIJALocked = settingShowAllBalances || nLockedBalance != 0;
-    bool showWatchOnlyZIJALocked = nWatchOnlyLockedBalance != 0;
+    bool showDAZZAvailable = settingShowAllBalances || pivAvailableBalance != nTotalBalance;
+    bool showWatchOnlyDAZZAvailable = watchOnlyBalance != nTotalWatchBalance;
+    bool showDAZZPending = settingShowAllBalances || unconfirmedBalance != 0;
+    bool showWatchOnlyDAZZPending = watchUnconfBalance != 0;
+    bool showDAZZLocked = settingShowAllBalances || nLockedBalance != 0;
+    bool showWatchOnlyDAZZLocked = nWatchOnlyLockedBalance != 0;
     bool showImmature = settingShowAllBalances || immatureBalance != 0;
     bool showWatchOnlyImmature = watchImmatureBalance != 0;
     bool showWatchOnly = nTotalWatchBalance != 0;
-    bool showzZIJAAvailable = settingShowAllBalances || zerocoinBalance != matureZerocoinBalance;
-    bool showzZIJAnconfirmed = settingShowAllBalances || unconfirmedZerocoinBalance != 0;
-    bool showzZIJAImmature = settingShowAllBalances || immatureZerocoinBalance != 0;
+    bool showzDAZZAvailable = settingShowAllBalances || zerocoinBalance != matureZerocoinBalance;
+    bool showzDAZZnconfirmed = settingShowAllBalances || unconfirmedZerocoinBalance != 0;
+    bool showzDAZZImmature = settingShowAllBalances || immatureZerocoinBalance != 0;
     bool showPercentages = ! (zerocoinBalance == 0 && nTotalBalance == 0);
 
     static int cachedTxLocks = 0;
@@ -331,7 +332,7 @@ void OverviewPage::setWalletModel(WalletModel* model)
         connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyLabels(bool)));
     }
 
-    // update the display unit, to not use the default ("ZIJA")
+    // update the display unit, to not use the default ("DAZZ")
     updateDisplayUnit();
 }
 

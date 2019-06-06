@@ -1,6 +1,7 @@
 // Copyright (c) 2017-2018 The PIVX developers
 // Copyright (c) 2017-2018 The HUZU developers
-// Copyright (c) 2018 The ZIJA developers
+// Copyright (c) 2018-2019 The ZIJA developers
+// Copyright (c) 2019 The DAZZ developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,15 +25,15 @@ public:
     virtual CAmount GetValue() = 0;
     virtual bool CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal) = 0;
     virtual bool GetModifier(uint64_t& nStakeModifier) = 0;
-    virtual bool IsZZIJA() = 0;
+    virtual bool IsZDAZZ() = 0;
     virtual CDataStream GetUniqueness() = 0;
 };
 
 
-// zZIJAStake can take two forms
+// zDAZZStake can take two forms
 // 1) the stake candidate, which is a zcmint that is attempted to be staked
 // 2) a staked zpiv, which is a zcspend that has successfully staked
-class CZZijaStake : public CStakeInput
+class CZDazzlingStake : public CStakeInput
 {
 private:
     uint32_t nChecksum;
@@ -41,7 +42,7 @@ private:
     uint256 hashSerial;
 
 public:
-    explicit CZZijaStake(libzerocoin::CoinDenomination denom, const uint256& hashSerial)
+    explicit CZDazzlingStake(libzerocoin::CoinDenomination denom, const uint256& hashSerial)
     {
         this->denom = denom;
         this->hashSerial = hashSerial;
@@ -49,7 +50,7 @@ public:
         fMint = true;
     }
 
-    explicit CZZijaStake(const libzerocoin::CoinSpend& spend);
+    explicit CZDazzlingStake(const libzerocoin::CoinSpend& spend);
 
     CBlockIndex* GetIndexFrom() override;
     bool GetTxFrom(CTransaction& tx) override;
@@ -59,19 +60,19 @@ public:
     bool CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut = 0) override;
     bool CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal) override;
     bool MarkSpent(CWallet* pwallet, const uint256& txid);
-    bool IsZZIJA() override { return true; }
+    bool IsZDAZZ() override { return true; }
     int GetChecksumHeightFromMint();
     int GetChecksumHeightFromSpend();
     uint32_t GetChecksum();
 };
 
-class CZijaStake : public CStakeInput
+class CDazzlingStake : public CStakeInput
 {
 private:
     CTransaction txFrom;
     unsigned int nPosition;
 public:
-    CZijaStake()
+    CDazzlingStake()
     {
         this->pindexFrom = nullptr;
     }
@@ -85,7 +86,7 @@ public:
     CDataStream GetUniqueness() override;
     bool CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut = 0) override;
     bool CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal) override;
-    bool IsZZIJA() override { return false; }
+    bool IsZDAZZ() override { return false; }
 };
 
 
