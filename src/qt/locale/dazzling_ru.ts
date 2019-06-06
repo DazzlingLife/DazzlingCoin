@@ -2239,7 +2239,7 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
     </message>
     <message>
         <source>out of sync</source>
-        <translation>несинронизировано</translation>
+        <translation>несинхронизировано</translation>
     </message>
     <message>
         <source>Current percentage of zDAZZ.
@@ -2752,7 +2752,7 @@ To change the percentage (no restart required):
     </message>
     <message>
         <source>out of sync</source>
-        <translation>несинронизировано</translation>
+        <translation>несинхронизировано</translation>
     </message>
     <message>
         <source>Mint Status: Okay</source>
@@ -3120,7 +3120,7 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     </message>
     <message>
         <source>Number of connections</source>
-        <translation>Количество соениднений</translation>
+        <translation>Количество соединений</translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -3360,7 +3360,7 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     </message>
     <message>
         <source>The buttons below will restart the wallet with command-line options to repair the wallet, fix issues with corrupt blockhain files or missing/obsolete transactions.</source>
-        <translation>Кнопка ниже перезапустит кошелёк с некоторыми опциями кммандной строки чтобы отремотировать кошелёк, файлы блокчейна и пропавшие / устаревшие транзакции. </translation>
+        <translation>Кнопка ниже перезапустит кошелёк с некоторыми опциями командной строки чтобы отремотировать кошелёк, файлы блокчейна и пропавшие / устаревшие транзакции. </translation>
     </message>
     <message>
         <source>Wallet repair options.</source>
